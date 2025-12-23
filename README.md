@@ -1,92 +1,97 @@
-# Document Processing Application - Invoice to Text
+# Document Processing Application
 
-A modern React + TypeScript + Vite application for processing invoice documents and extracting text data.
+Invoice document processing application built with React and TypeScript.
 
-## Features
+## Installation
 
-- **Document Upload**: Easy file upload interface for invoice processing
-- **Data Extraction**: Automated text extraction from uploaded documents
-- **Response Management**: View extracted data in structured table format
-- **Upload History**: Track and manage previously processed documents
-- **Modern UI**: Built with React, TypeScript, and Tailwind CSS
-- **Type-Safe**: Full TypeScript support with strict type checking
-- **Fast Development**: Vite for instant HMR and optimized builds
-
-## Tech Stack
-
-- **Frontend**: React 19, TypeScript
-- **Build Tool**: Vite 7
-- **Styling**: Tailwind CSS 4
-- **Linting**: ESLint with TypeScript support
-- **Package Manager**: npm
-
-## Project Structure
-
-```
-src/
-├── components/          # Reusable React components
-│   ├── FileUpload.tsx
-│   ├── ResponseTable.tsx
-│   └── UploadHistory.tsx
-├── pages/              # Page-level components
-│   └── DocumentUploadPage.tsx
-├── services/           # API and service calls
-│   └── uploadService.ts
-├── hooks/              # Custom React hooks
-│   └── useUpload.ts
-├── types/              # TypeScript definitions
-│   └── index.ts
-└── assets/             # Static assets
-```
-
-## Getting Started
-
-### Prerequisites
-- Node.js 16+ and npm
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone https://github.com/PrabhashSwarnajith/Document-Processing-Application.git
-cd invoice-to-text
-```
-
-2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Start the development server
+## Development
+
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+## Build
 
-## Available Scripts
+```bash
+npm run build
+```
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
-- `npm run preview` - Preview production build
+## Preview
 
-## Usage
+```bash
+npm run preview
+```
 
-1. Open the application in your browser
-2. Upload an invoice document using the file upload interface
-3. Wait for the document to be processed
-4. View the extracted data in the response table
-5. Check upload history to access previous documents
+## Lint
 
-## Contributing
+```bash
+npm run lint
+```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## Features
 
-## License
+- Upload invoice documents
+- Extract text data
+- View results in table format
+- Track upload history
 
-This project is licensed under the MIT License.
+## Technologies
 
-## Support
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
 
-For issues or questions, please open an issue on GitHub.
+## n8n Workflows
+
+This project includes n8n workflow automation for document processing. 
+
+### n8n Setup
+
+1. Install n8n globally:
+```bash
+npm install -g n8n
+```
+
+2. Start n8n:
+```bash
+n8n
+```
+
+3. Access the n8n editor at `http://localhost:5678`
+
+### Available Workflows
+
+**Smart Document Parser for Invoices, Logs or Sensor Reports**
+- Location: `n8/PDF_Image_csv_to_Sheet.json`
+- Handles PDF, Image, and CSV file formats
+- Extracts invoice details using Google Gemini AI:
+  - Invoice ID
+  - Invoice Date
+  - Due Date
+  - Customer Name
+  - Vendor Name
+  - Subtotal
+  - Tax Total
+  - Total Amount
+  - Currency
+- Stores extracted data in Google Sheets
+- Supports webhook-based file uploads
+
+### Workflow Features
+
+- **Multi-format Support**: Process PDFs, images (JPG, PNG), and CSV files
+- **AI-Powered Extraction**: Uses Google Gemini 1.5 Flash for accurate data extraction
+- **Google Sheets Integration**: Automatically saves extracted data to Google Sheets
+- **Flexible Data Mapping**: Easily customize extracted fields and sheet mappings
+
+### Integration
+
+The frontend communicates with n8n workflows through API endpoints for:
+- Processing uploaded documents via webhook
+- Retrieving extracted data
+- Managing workflow executions
