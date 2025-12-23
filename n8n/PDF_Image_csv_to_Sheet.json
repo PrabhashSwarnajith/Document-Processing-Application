@@ -1,0 +1,977 @@
+{
+  "name": "Smart Document Parser for Invoices, Logs or Sensor Reports (PDF/Image/csv to Sheet)",
+  "nodes": [
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "40ee8e68-2b72-4ba9-b7a2-8c976852d48b",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $binary.file.mimeType }}",
+                    "rightValue": "image"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "c4315e16-313f-4363-a625-71436498e46a",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $binary[Object.keys($binary)[0]].mimeType }}",
+                    "rightValue": "application/pdf"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "cffb0678-f006-47e0-91ea-afd17f133a77",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "leftValue": "={{ $binary[Object.keys($binary)[0]].mimeType }}",
+                    "rightValue": "csv"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e11a252d-6698-46af-9eb1-fb7cf9623377",
+      "name": "Check file type",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -224,
+        192
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "0",
+          "cachedResultUrl": "",
+          "cachedResultName": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 0,
+          "cachedResultUrl": "",
+          "cachedResultName": "Invoice"
+        },
+        "columns": {
+          "value": {
+            "total": "={{ $json.total }}",
+            "currency": "={{ $json.currency }}",
+            "due_date": "={{ $json.due_date }}",
+            "subtotal": "={{ $json.subtotal }}",
+            "tax_total": "={{ $json.tax_total }}",
+            "invoice_id": "={{ $json.invoice_id }}",
+            "vendor_name": "={{ $json.vendor_name }}",
+            "invoice_date": "={{ $json.invoice_date }}",
+            "customer_name": "={{ $json.customer_name }}"
+          },
+          "schema": [
+            {
+              "id": "invoice_id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "invoice_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice_date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "invoice_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due_date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "due_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "customer_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "vendor_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subtotal",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "subtotal",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tax_total",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "tax_total",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "total",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "currency",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_address",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "customer_address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_tax_id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "customer_tax_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_address",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "vendor_address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_tax_id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "vendor_tax_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_iban",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "vendor_iban",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_bic",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "vendor_bic",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "line_id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "line_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "quantity",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "quantity",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unit_price",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "unit_price",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "line_total",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "line_total",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tax_rate",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "tax_rate",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "invoice_id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c875b446-4e42-49c7-ac5b-c116160dc901",
+      "name": "Invoice data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        288,
+        432
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eyUMMW0YZowhc8Wi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "0",
+          "cachedResultUrl": "",
+          "cachedResultName": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 0,
+          "cachedResultUrl": "",
+          "cachedResultName": "Invoice"
+        },
+        "columns": {
+          "value": {
+            "total": "={{ $json.total }}",
+            "currency": "={{ $json.currency }}",
+            "due_date": "={{ $json.due_date }}",
+            "subtotal": "={{ $json.subtotal }}",
+            "tax_total": "={{ $json.tax_total }}",
+            "invoice_id": "={{ $json.invoice_id }}",
+            "vendor_name": "={{ $json.vendor_name }}",
+            "invoice_date": "={{ $json.invoice_date }}",
+            "customer_name": "={{ $json.customer_name }}"
+          },
+          "schema": [
+            {
+              "id": "invoice_id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "invoice_id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice_date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "invoice_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due_date",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "due_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "customer_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "vendor_name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subtotal",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "subtotal",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tax_total",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "tax_total",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "total",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "currency",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "currency",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Accounting",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Accounting",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "invoice_id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "80278c74-480d-4f39-bfe6-5b46522e1355",
+      "name": "Invoice Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1072,
+        96
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eyUMMW0YZowhc8Wi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.text || '';\n\n// 1. Remove code block syntax like ```json ... ```\nconst cleaned = raw.replace(/```json|```/g, '').trim();\n\n\n  const parsed = JSON.parse(cleaned);\n  return [{ json: parsed }];"
+      },
+      "id": "94359fc4-0256-42fe-aadb-d2c047bc8efe",
+      "name": "Transfrom data",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        864,
+        128
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "id": "6da369ba-6723-49ee-9958-199492e041cf",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        672,
+        256
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wE6tyG0fe9u8Ecwu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract the following invoice details from the given raw text:\n\n- invoice_id  \n- invoice_date  \n- due_date  \n- customer_name  \n- vendor_name  \n- subtotal  \n- tax_total  \n- total  \n- currency\n\nUse the following input text:\n{{ $json.text }}\n\nReturn the result as a valid JSON object using this exact structure:\n\n{\n  \"invoice_id\": \"string or null\",\n  \"invoice_date\": \"string (e.g., 2024-10-10) or null\",\n  \"due_date\": \"string (e.g., 2024-10-25) or null\",\n  \"customer_name\": \"string or null\",\n  \"vendor_name\": \"string or null\",\n  \"subtotal\": \"string or null\",\n  \"tax_total\": \"string or null\",\n  \"total\": \"string or null\",\n  \"currency\": \"string (e.g., €, $, £) or null\"\n}\n\nIf any field is missing or not found, set it as `null`. Return only the JSON output without extra text.\n",
+        "batching": {}
+      },
+      "id": "32d36c84-f56d-4025-9ac0-e12107c354a4",
+      "name": "Format data from text",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        528,
+        64
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "uploadDoc",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "b6b0c903-bce2-419e-8859-651fcd9e7330",
+      "name": "Webhook Invoice upload",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -464,
+        192
+      ],
+      "webhookId": "3dafecda-82df-4af9-84f2-7815ffa81319",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "id": "60481d6c-22e0-4d31-bc65-90a8ed500565",
+      "name": "PDF to Text",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        160,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "file",
+        "options": {}
+      },
+      "id": "a626153b-5e0f-4581-8d39-c072df253070",
+      "name": "CSV to JSON",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        -16,
+        432
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Smart Document Parser for Invoices, Logs or Sensor Reports (PDF/Image/csv to Sheet)",
+        "height": 848,
+        "width": 2604,
+        "color": 7
+      },
+      "id": "d5effb4d-d966-457b-ad25-a2d7427cc978",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        -176
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI that extracts invoice details from an image.\n\nExtract the following fields from this document:\n\n- invoice_id\n- invoice_date\n- due_date\n- customer_name\n- vendor_name\n- subtotal\n- tax_total\n- total\n- currency\n\nReturn ONLY a valid JSON object using this structure:\n\n{\n  \"invoice_id\": \"string or null\",\n  \"invoice_date\": \"string or null\",\n  \"due_date\": \"string or null\",\n  \"customer_name\": \"string or null\",\n  \"vendor_name\": \"string or null\",\n  \"subtotal\": \"string or null\",\n  \"tax_total\": \"string or null\",\n  \"total\": \"string or null\",\n  \"currency\": \"string or null\"\n}\n\nIf any value cannot be found, use null.\nDo not include explanation. Only return JSON.\n",
+        "batching": {}
+      },
+      "id": "aab9075e-7139-465d-b5e6-ee06d3b94c2f",
+      "name": "image to json",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        48,
+        -96
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        80
+      ],
+      "id": "13e59939-8deb-4842-b1cb-945bb5567fbf",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wE6tyG0fe9u8Ecwu",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.text || '';\n\n// 1. Remove code block syntax like ```json ... ```\nconst cleaned = raw.replace(/```json|```/g, '').trim();\n\n\n  const parsed = JSON.parse(cleaned);\n  return [{ json: parsed }];"
+      },
+      "id": "535ea768-5f8b-473c-87f1-4b1ca7ad0b3c",
+      "name": "Transfrom data1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        464,
+        -112
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1b8z8D0CviQGA4Q1FlYZBm5yqBwVfVhvWiFlni_XAwOY",
+          "mode": "list",
+          "cachedResultName": "Invoice Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b8z8D0CviQGA4Q1FlYZBm5yqBwVfVhvWiFlni_XAwOY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Invoice",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b8z8D0CviQGA4Q1FlYZBm5yqBwVfVhvWiFlni_XAwOY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "total": "={{ $json.total }}",
+            "currency": "={{ $json.currency }}",
+            "due_date": "={{ $json.due_date }}",
+            "subtotal": "={{ $json.subtotal }}",
+            "tax_total": "={{ $json.tax_total }}",
+            "invoice_id": "={{ $json.invoice_id }}",
+            "vendor_name": "={{ $json.vendor_name }}",
+            "invoice_date": "={{ $json.invoice_date }}",
+            "customer_name": "={{ $json.customer_name }}"
+          },
+          "matchingColumns": [
+            "invoice_id"
+          ],
+          "schema": [
+            {
+              "id": "invoice_id",
+              "displayName": "invoice_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "invoice_date",
+              "displayName": "invoice_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due_date",
+              "displayName": "due_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor_name",
+              "displayName": "vendor_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subtotal",
+              "displayName": "subtotal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tax_total",
+              "displayName": "tax_total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "currency",
+              "displayName": "currency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "dbeb7552-0438-4a50-8133-09b424744ac2",
+      "name": "Invoice Data1",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1056,
+        -112
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "eyUMMW0YZowhc8Wi",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"total\": \"{{ $json.total }}\",\n  \"currency\": \"{{ $json.currency }}\",\n  \"due_date\": \"{{ $json.due_date }}\",\n  \"subtotal\": \"{{ $json.subtotal }}\",\n  \"tax_total\": \"{{ $json.tax_total }}\",\n  \"invoice_id\": \"{{ $json.invoice_id }}\",\n  \"invoice_date\": \"{{ $json.invoice_date }}\",\n  \"customer_name\": \"{{ $json.customer_name }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1808,
+        144
+      ],
+      "id": "25cd7fa8-6e68-4b9b-92bc-900d2545a6f1",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CSV to JSON": {
+      "main": [
+        [
+          {
+            "node": "Invoice data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF to Text": {
+      "main": [
+        [
+          {
+            "node": "Format data from text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transfrom data": {
+      "main": [
+        [
+          {
+            "node": "Invoice Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check file type": {
+      "main": [
+        [
+          {
+            "node": "image to json",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDF to Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CSV to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format data from text": {
+      "main": [
+        [
+          {
+            "node": "Transfrom data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Invoice upload": {
+      "main": [
+        [
+          {
+            "node": "Check file type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Format data from text",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "image to json": {
+      "main": [
+        [
+          {
+            "node": "Transfrom data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "image to json",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transfrom data1": {
+      "main": [
+        [
+          {
+            "node": "Invoice Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice Data1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "34b3b57a-20ff-43bf-bf12-aacce710f87b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c54ea3eb4c7853ebffc8ef635d7796f431a69789d169094cd0ed7097c211804c"
+  },
+  "id": "ioyCwVxsA4lK7Oy0",
+  "tags": []
+}
